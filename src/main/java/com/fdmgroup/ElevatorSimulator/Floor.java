@@ -1,16 +1,21 @@
 package com.fdmgroup.ElevatorSimulator;
 
+import java.util.ArrayList;
+
 public class Floor {
-	private int passenger;
+	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 	private String floorName;
-	private static Boolean elevatorHere;
+	public Boolean elevatorHere;
 	
-	
-	public Floor(String floorName) {
-		this.setFloorName(floorName);
+	public void addPassenger(Passenger passenger) {
+		this.passengers.add(passenger);
 	}
 	
-	public boolean getElevatorHere() {
+	public Floor(String floorName) {
+		this.floorName = floorName;
+	}
+	
+	public synchronized boolean getElevatorHere() {
 		if (elevatorHere == null) {
 			elevatorHere = true;
 			return false;
@@ -18,20 +23,19 @@ public class Floor {
 			return true;
 		}
 	}
+	
+	public synchronized void leaveFloor() {
+		this.elevatorHere = null;
+	}
 
-	public synchronized void doStuffAtFloor() throws InterruptedException {
-		System.out.println("You are at " + getFloorName() + "floor");
+	public synchronized void doStuffAtFloor(String name, int passengers) throws InterruptedException {
+		System.out.println(name + " is at " + getFloorName() + " floor to pick up " + passengers + " passengers");
 		Thread.sleep(5000);
 	}
 
-	public void loadPassenger(int newPassenger) {
-		this.passenger = this.passenger + newPassenger;
+	public ArrayList<Passenger> getPassengers() {
+		return this.passengers;
 	}
-	
-	public void unloadPassenger(int goPassenger) {
-		this.passenger = this.passenger - goPassenger;
-	}
-
 
 	public String getFloorName() {
 		return this.floorName;
